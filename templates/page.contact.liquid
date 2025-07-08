@@ -1,14 +1,32 @@
-<h1>{{ page.title }}</h1>
-{% form 'contact' %}
-  {% if form.posted_successfully? %} Thank you for your contact {% endif %}
-  {{ form.errors | default_errors }}
-  <label for="ContactFormName">name</label>
-  <input type="text" id="ContactFormName" name="contact[name]">
-  <label for="ContactFormEmail">email</label>
-  <input type="email" id="ContactFormEmail" name="contact[email]">
-  <label for="ContactFormPhone">phone</label>
-  <input type="tel" id="ContactFormPhone" name="contact[phone]">
-  <label for="ContactFormMessage">message</label>
-  <textarea rows="10" id="ContactFormMessage" name="contact[body]"></textarea>
-  <input type="submit" value="send">
-{% endform %}
+<div class="flex justify-center items-center min-h-[60vh] bg-gray-50">
+  <div class="w-full max-w-md bg-white rounded-lg shadow-lg p-5">
+    <h1 class="text-xl font-bold text-gray-900 mb-2 text-center">Contact Us</h1>
+    <p class="text-base text-gray-500 mb-5 text-center">We'd love to hear from you. Please fill out the form below and we'll get back to you as soon as possible.</p>
+    {% form 'contact' %}
+      {% if form.posted_successfully? %}
+        <div class="mb-4 p-3 rounded-md bg-gray-100 text-center text-gray-900">Thank you for your message!</div>
+      {% endif %}
+      {{ form.errors | default_errors }}
+      <div class="mb-4">
+        <label for="ContactFormName" class="block text-gray-900 mb-1">Name</label>
+        <input type="text" id="ContactFormName" name="contact[name]" class="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-black bg-gray-50" required>
+      </div>
+      <div class="mb-4">
+        <label for="ContactFormEmail" class="block text-gray-900 mb-1">Email</label>
+        <input type="email" id="ContactFormEmail" name="contact[email]" class="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-black bg-gray-50" required>
+      </div>
+      <div class="mb-4">
+        <label for="ContactFormPhone" class="block text-gray-900 mb-1">Phone</label>
+        <input type="tel" id="ContactFormPhone" name="contact[phone]" class="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-black bg-gray-50">
+      </div>
+      <div class="mb-5">
+        <label for="ContactFormMessage" class="block text-gray-900 mb-1">Message</label>
+        <textarea rows="6" id="ContactFormMessage" name="contact[body]" class="w-full border rounded-md p-2 focus:outline-none focus:ring-1 focus:ring-black bg-gray-50" required></textarea>
+      </div>
+      <button type="submit" class="w-full py-3 px-4 bg-gray-900 text-white rounded-md font-medium hover:bg-gray-100 hover:text-gray-900 transition">Send Message</button>
+    {% endform %}
+    <div class="mt-6 text-center text-gray-500 text-sm">
+      Or email us at <a href="mailto:info@example.com" class="underline hover:text-gray-900">info@example.com</a>
+    </div>
+  </div>
+</div>
