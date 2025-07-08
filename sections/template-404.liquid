@@ -1,2 +1,54 @@
-<h1>{{ 'general.404.title' | t }}</h1>
-<p>{{ 'general.404.subtext_html' | t }}</p>
+<section class="error-404" style="min-height: 80vh; display: flex; align-items: center; justify-content: center; background: #fff; padding: 0; font-family: 'Inter', 'Helvetica Neue', Arial, sans-serif;">
+  <div style="width: 100%; max-width: 400px; text-align: center; margin: 0 auto;">
+    <div style="font-size: 2.2rem; margin-bottom: 1.2rem; color: #64748b;">&#128269;</div>
+    <h1 style="font-size:2rem; margin-bottom:0.7rem; font-weight: 700; color: #222; letter-spacing: -0.5px;">{{ 'general.404.title' | t }}</h1>
+    <p style="font-size:1rem; margin-bottom:2.2rem; color: #555;">{{ 'general.404.subtext_html' | t }}</p>
+
+    <form id="error-404-search-form" action="/search" method="get" role="search" style="margin-bottom:2rem; display: flex; gap: 0.5rem; justify-content: center;">
+      <input id="404-search" type="search" name="q" placeholder="{{ 'general.search.placeholder' | t }}" style="padding:0.6rem 1rem; width:60%; max-width:180px; border:1px solid #e5e7eb; border-radius: 6px; font-size:1rem; outline:none; background: #fafbfc; color: #222; transition: border 0.2s; box-sizing: border-box;">
+      <button type="submit" style="padding:0.6rem 1.2rem; background:#2563eb; color:#fff; border:none; border-radius:6px; font-weight:500; font-size:1rem; cursor:pointer; transition: background 0.2s;">{{ 'general.search.submit' | t }}</button>
+    </form>
+    <div id="error-404-search-error" style="display:none; color:#ef4444; background:#fef2f2; border:1px solid #fecaca; border-radius:6px; padding:0.7rem 1rem; margin-bottom:1.5rem; font-size:0.98rem; text-align:center;">Please enter a search term.</div>
+
+    <a href="/" style="display:inline-block; margin-bottom:2.2rem; padding:0.7rem 2rem; background:#2563eb; color:#fff; border-radius:6px; text-decoration:none; font-weight:500; font-size:1rem; transition: background 0.2s;">{{ 'general.404.back_to_home' | t }}</a>
+  </div>
+</section>
+<style>
+  .error-404 input[type="search"]:focus {
+    border: 1px solid #2563eb !important;
+  }
+  .error-404 button[type="submit"]:hover {
+    background: #1d4ed8 !important;
+  }
+  .error-404 a[href="/"]:hover {
+    background: #1d4ed8 !important;
+  }
+  .error-404 ul li a:hover {
+    background: #2563eb !important;
+    color: #fff !important;
+    border: 1px solid #2563eb !important;
+  }
+</style>
+<script>
+  (function() {
+    var form = document.getElementById('error-404-search-form');
+    var input = document.getElementById('404-search');
+    var error = document.getElementById('error-404-search-error');
+    if (form && input && error) {
+      form.addEventListener('submit', function(e) {
+        if (!input.value.trim()) {
+          e.preventDefault();
+          error.style.display = 'block';
+          input.setAttribute('aria-invalid', 'true');
+          input.focus();
+        }
+      });
+      input.addEventListener('input', function() {
+        if (error.style.display === 'block') {
+          error.style.display = 'none';
+          input.removeAttribute('aria-invalid');
+        }
+      });
+    }
+  })();
+</script>
