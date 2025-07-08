@@ -1,27 +1,47 @@
 {% layout none %}
 <!doctype html>
+<html>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="format-detection" content="telephone=no">
-  {{ 'vendor/qrcode.js' | shopify_asset_url | script_tag }}
+  <script src="{{ 'vendor/qrcode.js' | shopify_asset_url }}" async></script>
 </head>
-<body>
-  <div id="qr-code"></div>
+<body style="background: #f4f6f8; margin: 0; font-family: 'Segoe UI', Arial, sans-serif;">
+  <div style="max-width: 400px; margin: 3rem auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 2.5rem 2rem 2rem 2rem; text-align: center;">
+    <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: #222;">Gift Card</h1>
+    <p style="color: #888; margin-bottom: 1.5rem;">Enjoy your gift!</p>
+    <div style="font-size: 1.2rem; color: #007bff; font-weight: 600; margin-bottom: 1.2rem;">
+      Value: {{ gift_card.balance | money }}
+    </div>
+    <div id="qr-code" style="margin: 0 auto 1.5rem auto;"></div>
+    <div style="margin-bottom: 1.2rem;">
+      <span id="gift-card-code" style="font-size: 1.3rem; letter-spacing: 0.12em; background: #f8f8f8; padding: 0.5em 1em; border-radius: 6px; font-family: 'Menlo', monospace;">{{ gift_card.code }}</span>
+      <button onclick="copyGiftCardCode()" style="margin-left: 0.5em; background: #007bff; color: #fff; border: none; border-radius: 4px; padding: 0.4em 1em; font-size: 1em; cursor: pointer;">Copy</button>
+    </div>
+    {% if gift_card.expires_on %}
+      <div style="color: #d9534f; font-size: 0.98em; margin-bottom: 1.2rem;">Expires on: {{ gift_card.expires_on | date: "%B %d, %Y" }}</div>
+    {% endif %}
+    <div style="color: #666; font-size: 1em; margin-bottom: 2rem;">Use this code at checkout to redeem your gift card.</div>
+    {% if gift_card.pass_url %}
+      <a href="{{ gift_card.pass_url }}">
+        <img id="apple-wallet-badge" src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="Add To Apple Wallet" style="margin-bottom: 1rem; border-radius: 6px; box-shadow: 0 1px 4px rgba(0,0,0,0.08);">
+      </a>
+    {% endif %}
+  </div>
   <script>
     new QRCode(document.getElementById("qr-code"), {
       text: "{{ gift_card.qr_identifier }}",
       width: 120,
       height: 120
     });
+    function copyGiftCardCode() {
+      var code = document.getElementById('gift-card-code').innerText;
+      navigator.clipboard.writeText(code).then(function() {
+        alert('Gift card code copied!');
+      });
+    }
   </script>
-  <footer>
-    {% if gift_card.pass_url %}
-    <a href="{{ gift_card.pass_url }}">
-      <img id="apple-wallet-badge" src="{{ 'gift-card/add-to-apple-wallet.svg' | shopify_asset_url }}" width="120" height="40" alt="Add To Apple Wallet">
-    </a>
-    {% endif %}
-  </footer>
 </body>
 </html>

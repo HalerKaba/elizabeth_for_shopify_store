@@ -1,46 +1,68 @@
 {% if cart.item_count > 0 %}
-  <h1>cart</h1>
-  <form action="/cart" method="post" novalidate>
-    <table>
-      <thead>
-        <th colspan="2">Prod</th>
-        <th>Price</th>
-        <th>Qty</th>
-        <th>total</th>
-      </thead>
-      <tbody>
-        {% for item in cart.items %}
-          <tr>
-            <td>
-              <a href="{{ item.url | within: collections.all }}">
-                <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}">
-              </a>
-            </td>
-            <td>
-              <a href="{{ item.url }}">{{ item.product.title }}</a>
-              {{ item.variant.title }}
-              <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0">remove</a>
-            </td>
-            <td>{{ item.price | money }}</td>
-            <td>
-              <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0">
-            </td>
-            <td>
-              {% if item.original_line_price != item.line_price %}{{ item.original_line_price | money }}{% endif %}
-              {{ item.line_price | money }}
-              {% for discount in item.discounts %}{{ discount.title }}{% endfor %}
-            </td>
-          </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    <div>
-      <p>sub total : {{ cart.total_price | money }}</p>
-      <button type="submit" name="update">Update</button>
-      <button type="submit" name="checkout">Checkout</button>
+  <div class="cart-container" style="max-width: 900px; margin: 2rem auto; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <h1 style="font-size: 2rem; font-weight: 600; margin: 0;">Your Cart</h1>
+      <a href="/collections/all" style="color: #007bff; text-decoration: none; font-size: 1rem;">&larr; Continue Shopping</a>
     </div>
-  </form>
+    <form action="/cart" method="post" novalidate>
+      <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+          <thead style="background: #f8f8f8;">
+            <tr>
+              <th style="padding: 12px 8px; text-align: left;">Product</th>
+              <th style="padding: 12px 8px; text-align: left;">Details</th>
+              <th style="padding: 12px 8px; text-align: right;">Price</th>
+              <th style="padding: 12px 8px; text-align: center;">Quantity</th>
+              <th style="padding: 12px 8px; text-align: right;">Total</th>
+              <th style="padding: 12px 8px; text-align: center;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in cart.items %}
+              <tr style="border-bottom: 1px solid #eee;">
+                <td style="padding: 12px 8px;">
+                  <a href="{{ item.url | within: collections.all }}">
+                    <img src="{{ item | img_url: 'medium' }}" alt="{{ item.title | escape }}" style="width: 64px; height: auto; border-radius: 4px;" width="64" height="64">
+                  </a>
+                </td>
+                <td style="padding: 12px 8px;">
+                  <a href="{{ item.url }}" style="font-weight: 500; color: #222; text-decoration: none;">{{ item.product.title }}</a><br>
+                  <span style="color: #888; font-size: 0.95em;">{{ item.variant.title }}</span>
+                </td>
+                <td style="padding: 12px 8px; text-align: right;">{{ item.price | money }}</td>
+                <td style="padding: 12px 8px; text-align: center;">
+                  <input type="number" name="updates[]" id="updates_{{ item.key }}" value="{{ item.quantity }}" min="0" style="width: 56px; padding: 4px; border: 1px solid #ccc; border-radius: 4px; text-align: center;">
+                </td>
+                <td style="padding: 12px 8px; text-align: right;">
+                  {% if item.original_line_price != item.line_price %}
+                    <span style="text-decoration: line-through; color: #888;">{{ item.original_line_price | money }}</span><br>
+                  {% endif %}
+                  <span style="font-weight: 500;">{{ item.line_price | money }}</span>
+                  {% for discount in item.discounts %}<br><span style="color: #d9534f; font-size: 0.95em;">{{ discount.title }}</span>{% endfor %}
+                </td>
+                <td style="padding: 12px 8px; text-align: center;">
+                  <a href="/cart/change?line={{ forloop.index }}&amp;quantity=0" style="color: #d9534f; text-decoration: none; font-size: 1.2em;" title="Remove">&times;</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; justify-content: flex-end; align-items: flex-start; gap: 2rem;">
+        <div style="min-width: 260px;">
+          <div style="font-size: 1.1rem; margin-bottom: 1rem;">
+            <strong>Subtotal:</strong> <span style="float: right;">{{ cart.total_price | money }}</span>
+          </div>
+          <button type="submit" name="update" style="background: #f8f8f8; color: #222; border: 1px solid #ccc; border-radius: 4px; padding: 10px 18px; font-size: 1rem; margin-right: 8px; cursor: pointer;">Update Cart</button>
+          <button type="submit" name="checkout" style="background: #007bff; color: #fff; border: none; border-radius: 4px; padding: 10px 18px; font-size: 1rem; cursor: pointer;">Checkout</button>
+        </div>
+      </div>
+    </form>
+  </div>
 {% else %}
-  <h2>cart</h2>
-  Cart is empty
+  <div class="cart-empty" style="max-width: 500px; margin: 4rem auto; text-align: center; padding: 2rem; background: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
+    <h2 style="font-size: 2rem; font-weight: 600; margin-bottom: 1rem;">Your Cart is Empty</h2>
+    <p style="color: #666; margin-bottom: 2rem;">Looks like you haven't added anything to your cart yet.</p>
+    <a href="/collections/all" style="background: #007bff; color: #fff; border: none; border-radius: 4px; padding: 12px 28px; font-size: 1.1rem; text-decoration: none; display: inline-block;">Start Shopping</a>
+  </div>
 {% endif %}

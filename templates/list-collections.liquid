@@ -1,17 +1,58 @@
-{% for collection in collections %}
-  {% unless collection.handle == 'frontpage' %}
-    {% capture collection_title %}{{ collection.title | escape }}{% endcapture %}
-    <a href="{{ collection.url }}">More {{ collection_title }} &rsaquo;</a>
-    {% for product in collection.products limit:5 %}
-      {% assign grid_item_width = 'large--one-fifth medium--one-half' %}
-      <div>
-        <a href="{{ product.url | within: collection }}">{{ product.title }}</a>
-        {{ product.price | money }}
-        {% unless product.available %}<br><strong>sold out</strong>{% endunless %}
-        <a href="{{ product.url | within: collection }}">
-          <img src="{{ product.featured_image.src | img_url: 'large' }}" alt="{{ product.featured_image.alt | escape }}">
-        </a>
+<style>
+  .collections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+  }
+  .collection-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    padding: 1.5rem 1rem 1rem 1rem;
+    text-align: center;
+    transition: box-shadow 0.2s;
+  }
+  .collection-card:hover {
+    box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  }
+  .collection-card img {
+    width: 100%;
+    max-width: 180px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+  }
+  .collection-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 0.5rem;
+  }
+  .collection-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .collection-link:hover {
+    text-decoration: underline;
+  }
+</style>
+<div class="collections-grid">
+  {% for collection in collections %}
+    {% unless collection.handle == 'frontpage' %}
+      <div class="collection-card">
+        {% if collection.image %}
+          <img src="{{ collection.image | img_url: 'large' }}" alt="{{ collection.title | escape }}" width="180" height="120">
+        {% endif %}
+        <div class="collection-title">{{ collection.title }}</div>
+        {% if collection.description != blank %}
+          <div style="color: #888; font-size: 0.98em; margin-bottom: 0.5rem;">{{ collection.description | strip_html | truncate: 80 }}</div>
+        {% endif %}
+        <a class="collection-link" href="{{ collection.url }}">View Collection &rsaquo;</a>
       </div>
-    {% endfor %}
-  {% endunless %}
-{% endfor %}
+    {% endunless %}
+  {% endfor %}
+</div>

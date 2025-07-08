@@ -1,29 +1,54 @@
-{% assign current_variant = product.selected_or_first_available_variant %}
-{% assign featured_image = current_variant.featured_image | default: product.featured_image %}
-<img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg">
-{% for image in product.images %}
-  <a href="{{ image.src | img_url: 'large' }}">
-    <img src="{{ image.src | img_url: 'compact' }}" alt="{{ image.alt | escape }}">
-  </a>
-{% endfor %}
-<h1>{{ product.title }}</h1>
-<form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm">
-  <select name="id" id="productSelect">
-    {% for variant in product.variants %}
-      {% if variant.available %}
-        <option value="{{ variant.id }}">
-          {{ variant.title }} - {{ variant.price | money_with_currency }}
-        </option>
-      {% else %}
-        <option disabled="disabled">
-          {{ variant.title }} - sold out
-        </option>
-      {% endif %}
-    {% endfor %}
-  </select>
-  {{ current_variant.price | money }}
-  <label for="Quantity">quantity</label>
-  <input type="number" id="Quantity" name="quantity" value="1" min="1">
-  <button type="submit" name="add" id="AddToCart">Add to cart</button>
-</form>
-<div>{{ product.description }}</div>
+{% if product.gift_card? %}
+  <div style="max-width: 500px; margin: 3rem auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 2.5rem 2rem 2rem 2rem; text-align: center;">
+    <img src="{{ product.featured_image | img_url: 'large' }}" alt="Gift Card" class="product-main-image mx-auto hoverable-image" style="width: 180px; height: auto; margin-bottom: 1.5rem; border-radius: 8px;" width="180" height="120">
+    <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: #222;">{{ product.title }}</h1>
+    <p style="color: #888; margin-bottom: 1.5rem;">The perfect gift for any occasion!</p>
+    <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" style="margin-bottom: 1.5rem;">
+      <label for="productSelect" style="display: block; margin-bottom: 0.5rem; font-weight: 500;">Choose amount:</label>
+      <select name="id" id="productSelect" style="width: 100%; padding: 0.5em; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 1rem;">
+        {% for variant in product.variants %}
+          {% if variant.available %}
+            <option value="{{ variant.id }}">
+              {{ variant.title }} - {{ variant.price | money_with_currency }}
+            </option>
+          {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - sold out
+            </option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <label for="Quantity" style="display: block; margin-bottom: 0.5rem;">Quantity:</label>
+      <input type="number" id="Quantity" name="quantity" value="1" min="1" style="width: 80px; padding: 0.4em; border-radius: 4px; border: 1px solid #ccc; text-align: center; margin-bottom: 1rem;">
+      <button type="submit" name="add" id="AddToCart" style="background: #007bff; color: #fff; border: none; border-radius: 4px; padding: 0.8em 2em; font-size: 1.1rem; cursor: pointer; font-weight: 600;">Add to cart</button>
+    </form>
+    <div style="color: #666; font-size: 1em; margin-bottom: 1.5rem;">Gift cards are delivered by email and contain instructions to redeem them at checkout. No additional processing fees.</div>
+    <div style="color: #888; font-size: 0.98em;">{{ product.description }}</div>
+  </div>
+{% else %}
+  <div style="max-width: 500px; margin: 3rem auto; background: #fff; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 2.5rem 2rem 2rem 2rem; text-align: center;">
+    {% assign current_variant = product.selected_or_first_available_variant %}
+    {% assign featured_image = current_variant.featured_image | default: product.featured_image %}
+    <img src="{{ featured_image | img_url: 'large' }}" alt="{{ featured_image.alt | escape }}" id="ProductPhotoImg" class="product-main-image mx-auto hoverable-image" style="width: 180px; height: auto; margin-bottom: 1.5rem; border-radius: 8px;" width="180" height="120">
+    <h1 style="font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; color: #222;">{{ product.title }}</h1>
+    <form action="/cart/add" method="post" enctype="multipart/form-data" id="AddToCartForm" style="margin-bottom: 1.5rem;">
+      <select name="id" id="productSelect" style="width: 100%; padding: 0.5em; border-radius: 4px; border: 1px solid #ccc; margin-bottom: 1rem;">
+        {% for variant in product.variants %}
+          {% if variant.available %}
+            <option value="{{ variant.id }}">
+              {{ variant.title }} - {{ variant.price | money_with_currency }}
+            </option>
+          {% else %}
+            <option disabled="disabled">
+              {{ variant.title }} - sold out
+            </option>
+          {% endif %}
+        {% endfor %}
+      </select>
+      <label for="Quantity" style="display: block; margin-bottom: 0.5rem;">Quantity:</label>
+      <input type="number" id="Quantity" name="quantity" value="1" min="1" style="width: 80px; padding: 0.4em; border-radius: 4px; border: 1px solid #ccc; text-align: center; margin-bottom: 1rem;">
+      <button type="submit" name="add" id="AddToCart" style="background: #007bff; color: #fff; border: none; border-radius: 4px; padding: 0.8em 2em; font-size: 1.1rem; cursor: pointer; font-weight: 600;">Add to cart</button>
+    </form>
+    <div style="color: #888; font-size: 0.98em; margin-bottom: 1.5rem;">{{ product.description }}</div>
+  </div>
+{% endif %}
