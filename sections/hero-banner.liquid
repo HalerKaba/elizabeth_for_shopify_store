@@ -1,0 +1,56 @@
+{% comment %}
+  Hero Banner Section
+  This is a hero banner for the homepage. Customize the content and schema as needed.
+{% endcomment %}
+
+<section class="hero-banner" style="background-image: url({{ section.settings.background_image | img_url: '1600x' }});">
+  <div class="container">
+    <h1>{{ section.settings.heading }}</h1>
+    <p>{{ section.settings.subheading }}</p>
+    {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+      <a href="{{ section.settings.button_link }}" class="btn btn-primary">{{ section.settings.button_label }}</a>
+    {% endif %}
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Banner",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Welcome to Our Store!"
+    },
+    {
+      "type": "text",
+      "id": "subheading",
+      "label": "Subheading",
+      "default": "Discover our latest collection and exclusive offers."
+    },
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background Image"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "Shop Now"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Banner",
+      "category": "Homepage"
+    }
+  ]
+}
+{% endschema %} 
